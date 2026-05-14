@@ -20,23 +20,29 @@ $applications = $stmt->fetchAll();
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Список сохранённых анкет — Лабораторная работа №3</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* Дополнительные стили для таблицы */
+        .container {
+            max-width: 1400px;  /* Увеличено с 800px до 1400px */
+            width: 95%;
+        }
+        
         .applications-table {
             width: 100%;
+            min-width: 1200px;  /* Минимальная ширина таблицы */
             border-collapse: collapse;
             background-color: #fff;
             border-radius: 20px;
-            overflow: hidden;
+            overflow-x: auto;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
         .applications-table th,
         .applications-table td {
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             text-align: left;
             border-bottom: 1px solid #ffccd9;
             vertical-align: top;
@@ -48,6 +54,7 @@ $applications = $stmt->fetchAll();
             font-weight: 600;
             position: sticky;
             top: 0;
+            white-space: nowrap;
         }
         
         .applications-table tr:hover {
@@ -64,19 +71,20 @@ $applications = $stmt->fetchAll();
             color: white;
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin: 0.1rem;
+            white-space: nowrap;
         }
         
         .languages-cell {
+            min-width: 180px;
             max-width: 250px;
         }
         
-        .biography-preview {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .biography-cell {
+            max-width: 250px;
+            word-break: break-word;
+            white-space: normal;
         }
         
         .empty-state {
@@ -98,7 +106,8 @@ $applications = $stmt->fetchAll();
         .actions {
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            white-space: nowrap;
         }
         
         .btn-view {
@@ -107,8 +116,9 @@ $applications = $stmt->fetchAll();
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             transition: background-color 0.2s;
+            white-space: nowrap;
         }
         
         .btn-view:hover {
@@ -121,9 +131,10 @@ $applications = $stmt->fetchAll();
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             border: 1px solid #f44336;
             transition: all 0.2s;
+            white-space: nowrap;
         }
         
         .btn-delete:hover {
@@ -134,6 +145,8 @@ $applications = $stmt->fetchAll();
         .table-wrapper {
             overflow-x: auto;
             border-radius: 20px;
+            margin: 0 -0.5rem;
+            padding: 0 0.5rem;
         }
         
         .action-buttons {
@@ -215,6 +228,41 @@ $applications = $stmt->fetchAll();
             display: inline-block;
             width: 120px;
         }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 0 10px;
+            }
+            .applications-table th,
+            .applications-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            .badge {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.4rem;
+            }
+        }
+        
+        /* Цветовая индикация пола */
+        .gender-male {
+            color: #2196f3;
+            font-weight: bold;
+        }
+        .gender-female {
+            color: #e91e63;
+            font-weight: bold;
+        }
+        
+        /* Улучшенная читаемость */
+        .applications-table td {
+            word-break: break-word;
+        }
+        
+        .applications-table .email-cell {
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
@@ -235,7 +283,7 @@ $applications = $stmt->fetchAll();
         <?php if (empty($applications)): ?>
             <div class="empty-state">
                 <p>😕 Пока нет ни одной сохранённой анкеты.</p>
-                <a href="index.html" class="action-btn" style="margin-top: 1rem; display: inline-block;">📝 Заполнить первую анкету</a>
+                <a href="index.php" class="action-btn" style="margin-top: 1rem; display: inline-block;">📝 Заполнить первую анкету</a>
             </div>
         <?php else: ?>
             <div class="table-wrapper">
@@ -260,13 +308,13 @@ $applications = $stmt->fetchAll();
                                 <td><?php echo htmlspecialchars($app['id']); ?></td>
                                 <td><?php echo htmlspecialchars($app['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($app['phone']); ?></td>
-                                <td><?php echo htmlspecialchars($app['email']); ?></td>
+                                <td class="email-cell"><?php echo htmlspecialchars($app['email']); ?></td>
                                 <td><?php echo date('d.m.Y', strtotime($app['birth_date'])); ?></td>
-                                <td>
+                                <td class="<?php echo $app['gender'] == 'male' ? 'gender-male' : 'gender-female'; ?>">
                                     <?php 
                                     $gender_text = '';
-                                    if ($app['gender'] == 'male') $gender_text = 'Мужской';
-                                    if ($app['gender'] == 'female') $gender_text = 'Женский';
+                                    if ($app['gender'] == 'male') $gender_text = '♂ Мужской';
+                                    if ($app['gender'] == 'female') $gender_text = '♀ Женский';
                                     echo $gender_text;
                                     ?>
                                 </td>
@@ -280,15 +328,18 @@ $applications = $stmt->fetchAll();
                                     <?php 
                                         endif;
                                     endforeach; 
+                                    if (empty($app['languages'])):
+                                        echo '<em style="color: #9b4b6e;">— не выбрано —</em>';
+                                    endif;
                                     ?>
                                 </td>
-                                <td class="biography-preview">
+                                <td class="biography-cell">
                                     <?php 
                                     $bio = htmlspecialchars($app['biography'] ?? '');
                                     if (empty($bio)):
                                         echo '<em style="color: #9b4b6e;">— не указано —</em>';
                                     else:
-                                        echo mb_strlen($bio) > 50 ? mb_substr($bio, 0, 50) . '…' : $bio;
+                                        echo strlen($bio) > 100 ? substr($bio, 0, 100) . '…' : $bio;
                                     endif;
                                     ?>
                                 </td>
@@ -296,8 +347,8 @@ $applications = $stmt->fetchAll();
                                 <td class="actions">
                                     <a href="#" class="btn-view" onclick="showDetails(<?php echo htmlspecialchars(json_encode($app)); ?>, <?php echo htmlspecialchars(json_encode($languages ?? [])); ?>); return false;">👁️ Просмотр</a>
                                     <a href="delete.php?id=<?php echo $app['id']; ?>" class="btn-delete" onclick="return confirm('Удалить анкету №<?php echo $app['id']; ?>? Это действие нельзя отменить.');">🗑️ Удалить</a>
-                                </td>
-                            </tr>
+                                 </td>
+                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -305,7 +356,7 @@ $applications = $stmt->fetchAll();
         <?php endif; ?>
         
         <div class="action-buttons">
-            <a href="index.html" class="action-btn">📝 Добавить новую анкету</a>
+            <a href="index.php" class="action-btn">📝 Добавить новую анкету</a>
             <a href="export.php" class="action-btn secondary">📥 Экспорт в CSV</a>
         </div>
     </main>
@@ -330,7 +381,7 @@ $applications = $stmt->fetchAll();
             const modal = document.getElementById('detailsModal');
             const modalBody = document.getElementById('modalBody');
             
-            const genderText = application.gender === 'male' ? 'Мужской' : 'Женский';
+            const genderText = application.gender === 'male' ? '♂ Мужской' : '♀ Женский';
             const birthDate = new Date(application.birth_date).toLocaleDateString('ru-RU');
             const createdDate = new Date(application.created_at).toLocaleString('ru-RU');
             
