@@ -109,7 +109,7 @@
 <!-- Ссылка на список анкет -->
 <div class="action-buttons" style="margin-top: 1.5rem; text-align: center;">
     <a href="list.php" class="action-btn"> Посмотреть все сохранённые анкеты</a>
-    <a href="db.html" class="action-btn secondary"> Структура БД</a>
+    <a href="bd.html" class="action-btn secondary"> Структура БД</a>
 </div>
 </body>
 </html>
