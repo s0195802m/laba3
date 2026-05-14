@@ -73,7 +73,7 @@ $full_name = trim($_POST['full_name'] ?? '');
 if (empty($full_name)) {
     showError("Поле 'ФИО' обязательно для заполнения.");
 }
-if (mb_strlen($full_name) > 150) {
+if (strlen($full_name) > 150) {
     showError("Поле 'ФИО' не должно превышать 150 символов.");
 }
 if (!preg_match('/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u', $full_name)) {
@@ -126,7 +126,7 @@ if ($age > 120) {
     showError("Возраст не может превышать 120 лет.");
 }
 
-// 5. Пол: только допустимые значения
+// 5. Пол: только допустимые значения (male/female)
 $gender = $_POST['gender'] ?? '';
 $allowed_genders = ['male', 'female'];
 if (!in_array($gender, $allowed_genders)) {
@@ -146,7 +146,7 @@ if (!empty($invalid_langs)) {
 
 // 7. Биография: не обязательна, но если есть, проверим длину (макс 5000)
 $biography = trim($_POST['biography'] ?? '');
-if (mb_strlen($biography) > 5000) {
+if (strlen($biography) > 5000) {
     showError("Поле 'Биография' не должно превышать 5000 символов.");
 }
 
