@@ -268,22 +268,21 @@ $applications = $stmt->fetchAll();
 <body>
     <header>
         <div class="container">
-            <h1>📡 Программно-аппаратные средства Web</h1>
-            <p class="subtitle">(с) Сергей Синица 2020</p>
+           
             <h2>Задание 3. Список сохранённых анкет</h2>
-            <p class="student-info">Выполнил: Дмитрий | Логин: u82461 | Группа: Web-бэкенд</p>
+           
         </div>
     </header>
 
     <main class="container">
         <div class="stats">
-            📊 Всего анкет в базе данных: <strong><?php echo count($applications); ?></strong>
+             Всего анкет в базе данных: <strong><?php echo count($applications); ?></strong>
         </div>
 
         <?php if (empty($applications)): ?>
             <div class="empty-state">
                 <p>😕 Пока нет ни одной сохранённой анкеты.</p>
-                <a href="index.php" class="action-btn" style="margin-top: 1rem; display: inline-block;">📝 Заполнить первую анкету</a>
+                <a href="index.php" class="action-btn" style="margin-top: 1rem; display: inline-block;"> Заполнить первую анкету</a>
             </div>
         <?php else: ?>
             <div class="table-wrapper">
@@ -344,10 +343,7 @@ $applications = $stmt->fetchAll();
                                     ?>
                                 </td>
                                 <td><?php echo date('d.m.Y H:i:s', strtotime($app['created_at'])); ?></td>
-                                <td class="actions">
-                                    <a href="#" class="btn-view" onclick="showDetails(<?php echo htmlspecialchars(json_encode($app)); ?>, <?php echo htmlspecialchars(json_encode($languages ?? [])); ?>); return false;">👁️ Просмотр</a>
-                                    <a href="delete.php?id=<?php echo $app['id']; ?>" class="btn-delete" onclick="return confirm('Удалить анкету №<?php echo $app['id']; ?>? Это действие нельзя отменить.');">🗑️ Удалить</a>
-                                 </td>
+                                
                              </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -356,80 +352,21 @@ $applications = $stmt->fetchAll();
         <?php endif; ?>
         
         <div class="action-buttons">
-            <a href="index.php" class="action-btn">📝 Добавить новую анкету</a>
-            <a href="export.php" class="action-btn secondary">📥 Экспорт в CSV</a>
+            <a href="index.php" class="action-btn"> Добавить новую анкету</a>
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>Лабораторная работа №3 — Форма, валидация, база данных | Апрель 2026</p>
-        </div>
-    </footer>
+   
 
     <!-- Модальное окно для просмотра деталей -->
     <div id="detailsModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">&times;</span>
-            <h3>📄 Детали анкеты</h3>
+            <h3> Детали анкеты</h3>
             <div id="modalBody"></div>
         </div>
     </div>
 
-    <script>
-        function showDetails(application, languagesArray) {
-            const modal = document.getElementById('detailsModal');
-            const modalBody = document.getElementById('modalBody');
-            
-            const genderText = application.gender === 'male' ? '♂ Мужской' : '♀ Женский';
-            const birthDate = new Date(application.birth_date).toLocaleDateString('ru-RU');
-            const createdDate = new Date(application.created_at).toLocaleString('ru-RU');
-            
-            let languagesHtml = '';
-            if (languagesArray && languagesArray.length > 0) {
-                languagesArray.forEach(lang => {
-                    if (lang.trim()) {
-                        languagesHtml += `<span class="badge" style="margin-right: 5px;">${escapeHtml(lang.trim())}</span>`;
-                    }
-                });
-            } else {
-                languagesHtml = '<em style="color: #9b4b6e;">— не выбрано —</em>';
-            }
-            
-            modalBody.innerHTML = `
-                <div class="modal-field"><strong>ID:</strong> ${escapeHtml(application.id)}</div>
-                <div class="modal-field"><strong>ФИО:</strong> ${escapeHtml(application.full_name)}</div>
-                <div class="modal-field"><strong>Телефон:</strong> ${escapeHtml(application.phone)}</div>
-                <div class="modal-field"><strong>Email:</strong> ${escapeHtml(application.email)}</div>
-                <div class="modal-field"><strong>Дата рождения:</strong> ${birthDate}</div>
-                <div class="modal-field"><strong>Пол:</strong> ${genderText}</div>
-                <div class="modal-field"><strong>Любимые ЯП:</strong><br> ${languagesHtml}</div>
-                <div class="modal-field"><strong>Биография:</strong><br> ${escapeHtml(application.biography) || '<em style="color: #9b4b6e;">— не указано —</em>'}</div>
-                <div class="modal-field"><strong>Контракт:</strong> ${application.contract_accepted ? '✅ Ознакомлен' : '❌ Не ознакомлен'}</div>
-                <div class="modal-field"><strong>Дата создания:</strong> ${createdDate}</div>
-            `;
-            
-            modal.style.display = 'flex';
-        }
-        
-        function closeModal() {
-            document.getElementById('detailsModal').style.display = 'none';
-        }
-        
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Закрытие модального окна при клике вне его
-        window.onclick = function(event) {
-            const modal = document.getElementById('detailsModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
+    
 </body>
 </html>

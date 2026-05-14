@@ -9,10 +9,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>📡 Программно-аппаратные средства Web</h1>
-            <p class="subtitle">(с) Сергей Синица 2020</p>
             <h2>Задание 3. Форма с валидацией и сохранением в базу данных</h2>
-            <p class="student-info">Выполнил: Дмитрий | Логин: u82461 | Группа: Web-бэкенд</p>
         </div>
     </header>
 
@@ -56,7 +53,7 @@
                        value="<?php echo htmlspecialchars($_POST['birth_date'] ?? ''); ?>">
             </div>
 
-            <!-- 5. Пол (радиокнопки) -->
+            <!-- 5. Пол  -->
 <div class="form-group">
     <label>Пол <span class="required">*</span></label>
     <div class="radio-group">
@@ -67,7 +64,7 @@
     </div>
 </div>
 
-            <!-- 6. Любимый язык программирования (множественный выбор) -->
+            <!-- 6. Любимый язык программирования-->
             <div class="form-group">
                 <label for="languages">Любимый язык программирования <span class="required">*</span></label>
                 <select name="languages[]" id="languages" multiple size="6" required>
@@ -84,10 +81,10 @@
                     <option value="Scala" <?php echo (in_array('Scala', $_POST['languages'] ?? [])) ? 'selected' : ''; ?>>Scala</option>
                     <option value="Go" <?php echo (in_array('Go', $_POST['languages'] ?? [])) ? 'selected' : ''; ?>>Go</option>
                 </select>
-                <small>Зажмите Ctrl (или Cmd на Mac) для выбора нескольких языков</small>
+                <small>Зажмите Ctrl  для выбора нескольких языков</small>
             </div>
 
-            <!-- 7. Биография (многострочное текстовое поле) -->
+            <!-- 7. Биография  -->
             <div class="form-group">
                 <label for="biography">Биография</label>
                 <textarea id="biography" name="biography" rows="5" 
@@ -105,18 +102,14 @@
 
             <!-- 9. Кнопка отправки -->
             <div class="form-group">
-                <button type="submit" class="submit-btn">💾 Сохранить</button>
+                <button type="submit" class="submit-btn"> Сохранить</button>
             </div>
         </form>
     </main>
 <!-- Ссылка на список анкет -->
 <div class="action-buttons" style="margin-top: 1.5rem; text-align: center;">
-    <a href="list.php" class="action-btn">📋 Посмотреть все сохранённые анкеты</a>
+    <a href="list.php" class="action-btn"> Посмотреть все сохранённые анкеты</a>
+    <a href="db.html" class="action-btn secondary"> Структура БД</a>
 </div>
-    <footer>
-        <div class="container">
-            <p>Лабораторная работа №3 — Форма, валидация, база данных | Апрель 2026</p>
-        </div>
-    </footer>
 </body>
 </html>

@@ -1,11 +1,10 @@
 <?php
 // config.php - Конфигурация подключения к базе данных
-// Замените u82461 на ваш логин, а пароль на ваш пароль от сервера
 
 $host = 'localhost';
 $dbname = 'u82461';        // Имя БД совпадает с логином
 $username = 'u82461';      // Логин от сервера
-$password = '3874492';  // Пароль от сервера (замените на реальный)
+$password = '3874492';  // Пароль от сервера 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);

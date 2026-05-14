@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Работа с базой данных — Лабораторная работа №3</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для страницы БД */
+        .db-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        
+        .db-section {
+            background-color: #ffffff;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(240, 98, 146, 0.1);
+        }
+        
+        .db-section h3 {
+            font-size: 1.5rem;
+            color: #d81b60;
+            border-left: 6px solid #f06292;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .db-diagram {
+            background-color: #fff5f7;
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .table-name {
+            background-color: #f06292;
+            color: white;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+        
+        .schema-table th,
+        .schema-table td {
+            border: 1px solid #ffccd9;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        
+        .schema-table th {
+            background-color: #fff0f3;
+            color: #d81b60;
+        }
+        
+        .primary-key {
+            background-color: #fff0f3;
+            font-weight: bold;
+            color: #d81b60;
+        }
+        
+        .foreign-key {
+            color: #f06292;
+            font-style: italic;
+        }
+        
+        .relation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        
+        .relation-card {
+            background-color: #fff0f3;
+            border-radius: 16px;
+            padding: 1rem;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .relation-card h4 {
+            color: #d81b60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .arrow {
+            font-size: 2rem;
+            color: #f06292;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Задание 3. Работа с базой данных MySQL</h2>
+        </div>
+    </header>
+
+    <main class="db-container">
+        <section class="intro">
+            <p>В рамках третьей лабораторной работы была создана база данных MySQL  для хранения анкет пользователей. Ниже представлена структура базы данных, скриншоты процесса создания таблиц и пояснения к каждому этапу.</p>
+        </section>
+
+        <!-- Структура БД -->
+        <div class="db-section">
+            <h3> Структура базы данных</h3>
+            <p>База данных спроектирована в <strong>третьей нормальной форме </strong>. Используются три таблицы с отношением "один ко многим".</p>
+            
+            <div class="db-diagram">
+                <div class="relation">
+                    <div class="relation-card">
+                        <h4> applications</h4>
+                        <p>Основная таблица с анкетами</p>
+                        <small>id (PK), full_name, phone, email, birth_date, gender, biography, contract_accepted, created_at</small>
+                    </div>
+                    <div class="arrow">← 1 : N →</div>
+                    <div class="relation-card">
+                        <h4> application_languages</h4>
+                        <p>Таблица связи</p>
+                        <small>id (PK), application_id (FK), language_id (FK)</small>
+                    </div>
+                    <div class="arrow">← N : 1 →</div>
+                    <div class="relation-card">
+                        <h4> programming_languages</h4>
+                        <p>Справочник языков</p>
+                        <small>id (PK), name</small>
+                    </div>
+                </div>
+            </div>
+
+            <h4> Таблица applications (анкеты)</h4>
+            <table class="schema-table">
+                <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+                <tr><td class="primary-key">id</td><td>INT UNSIGNED</td><td>Первичный ключ, автоинкремент</td></tr>
+                <tr><td>full_name</td><td>VARCHAR(150)</td><td>ФИО (обязательное)</td></tr>
+                <tr><td>phone</td><td>VARCHAR(20)</td><td>Телефон</td></tr>
+                <tr><td>email</td><td>VARCHAR(100)</td><td>Email</td></tr>
+                <tr><td>birth_date</td><td>DATE</td><td>Дата рождения</td></tr>
+                <tr><td>gender</td><td>ENUM('male','female')</td><td>Пол</td></tr>
+                <tr><td>biography</td><td>TEXT</td><td>Биография (необязательное)</td></tr>
+                <tr><td>contract_accepted</td><td>TINYINT(1)</td><td>Согласие с контрактом</td></tr>
+                <tr><td>created_at</td><td>TIMESTAMP</td><td>Дата создания записи</td></tr>
+            </table>
+
+            <h4> Таблица programming_languages (справочник языков)</h4>
+            <table class="schema-table">
+                <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+                <tr><td class="primary-key">id</td><td>INT</td><td>Первичный ключ, автоинкремент</td></tr>
+                <tr><td>name</td><td>VARCHAR(50)</td><td>Название языка программирования (уникальное)</td></tr>
+            </table>
+
+            <h4> Таблица application_languages (связь анкет и языков)</h4>
+            <table class="schema-table">
+                <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+                <tr><td class="primary-key">id</td><td>INT UNSIGNED</td><td>Первичный ключ, автоинкремент</td></tr>
+                <tr><td class="foreign-key">application_id</td><td>INT UNSIGNED</td><td>Внешний ключ → applications(id) ON DELETE CASCADE</td></tr>
+                <tr><td class="foreign-key">language_id</td><td>INT</td><td>Внешний ключ → programming_languages(id)</td></tr>
+            </table>
+        </div>
+
+        <!-- Скриншот 0.png - подключение к MySQL -->
+        <div class="db-section">
+            <h3>🔌 1. Подключение к MySQL</h3>
+            <div class="task-description">
+                <p><strong>Что происходит:</strong> Подключение к серверу MySQL через командную строку. Используется команда <code>mysql -u u82461 -p</code>. После ввода пароля открывается интерактивная оболочка MySQL.</p>
+            </div>
+            <div class="screenshots">
+                <figure>
+                    <img src="0.png" alt="Подключение к MySQL">
+                    <figcaption>Подключение к MySQL: mysql -u u82461 -p</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Скриншот 1.png - создание таблицы языков -->
+        <div class="db-section">
+            <h3> 2. Создание таблицы programming_languages</h3>
+            <div class="task-description">
+                <p><strong>Что происходит:</strong> Создаётся справочная таблица языков программирования. В неё вставляются 12 допустимых языков: Pascal, C, C++, JavaScript, PHP, Python, Java, Haskell, Clojure, Prolog, Scala, Go.</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE IF NOT EXISTS programming_languages (<br>
+                &nbsp;&nbsp;&nbsp;id INT AUTO_INCREMENT PRIMARY KEY,<br>
+                &nbsp;&nbsp;&nbsp;name VARCHAR(50) NOT NULL UNIQUE<br>
+                );<br><br>
+                INSERT IGNORE INTO programming_languages (name) VALUES<br>
+                ('Pascal'), ('C'), ('C++'), ('JavaScript'), ('PHP'),<br>
+                ('Python'), ('Java'), ('Haskell'), ('Clojure'),<br>
+                ('Prolog'), ('Scala'), ('Go');
+            </div>
+            <div class="screenshots">
+                <figure>
+                    <img src="1.png" alt="Создание таблицы programming_languages">
+                    <figcaption>Создание таблицы языков и вставка данных (12 записей)</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Скриншот 2.png - создание основных таблиц -->
+        <div class="db-section">
+            <h3> 3. Создание таблиц applications и application_languages</h3>
+            <div class="task-description">
+                <p><strong>Что происходит:</strong> Создаётся основная таблица <code>applications</code> для хранения анкет, а также таблица связи <code>application_languages</code> для реализации отношения "один ко многим" между анкетами и языками программирования.</p>
+            </div>
+            <div class="code-block">
+                -- Основная таблица анкет<br>
+                CREATE TABLE IF NOT EXISTS applications (<br>
+                &nbsp;&nbsp;&nbsp;id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,<br>
+                &nbsp;&nbsp;&nbsp;full_name VARCHAR(150) NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;phone VARCHAR(20) NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;email VARCHAR(100) NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;birth_date DATE NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;gender ENUM('male', 'female') NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;biography TEXT,<br>
+                &nbsp;&nbsp;&nbsp;contract_accepted TINYINT(1) NOT NULL DEFAULT 0,<br>
+                &nbsp;&nbsp;&nbsp;created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP<br>
+                );<br><br>
+                -- Таблица связи (один ко многим)<br>
+                CREATE TABLE IF NOT EXISTS application_languages (<br>
+                &nbsp;&nbsp;&nbsp;id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,<br>
+                &nbsp;&nbsp;&nbsp;application_id INT UNSIGNED NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;language_id INT NOT NULL,<br>
+                &nbsp;&nbsp;&nbsp;FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE,<br>
+                &nbsp;&nbsp;&nbsp;FOREIGN KEY (language_id) REFERENCES programming_languages(id)<br>
+                );
+            </div>
+            <div class="screenshots">
+                <figure>
+                    <img src="2.png" alt="Создание таблиц applications и application_languages">
+                    <figcaption>Создание основной таблицы и таблицы связи с внешними ключами</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Скриншот 3.png - клонирование репозитория и обновление -->
+        <div class="db-section">
+            <h3>4. Размещение файлов на сервере</h3>
+            <div class="task-description">
+                <p><strong>Что происходит:</strong> Репозиторий с файлами лабораторной работы клонируется на сервер. Затем выполняется <code>git pull</code> для получения последних обновлений (включая исправления в <code>process.php</code> для совместимости без mbstring).</p>
+            </div>
+            <div class="screenshots">
+                <figure>
+                    <img src="3.png" alt="Клонирование репозитория и git pull">
+                    <figcaption>git clone laba3 и git pull для обновления файлов на сервере</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="db-section">
+            <h3> Схема связей таблиц</h3>
+            <div class="db-diagram">
+                <svg width="100%" height="200" viewBox="0 0 800 180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="20" width="220" height="140" rx="10" fill="#fff0f3" stroke="#f06292" stroke-width="2"/>
+                    <text x="130" y="45" text-anchor="middle" fill="#d81b60" font-weight="bold" font-size="14">applications</text>
+                    <text x="40" y="65" fill="#4a2a3a" font-size="11">id (PK)</text>
+                    <text x="40" y="80" fill="#4a2a3a" font-size="11">full_name</text>
+                    <text x="40" y="95" fill="#4a2a3a" font-size="11">phone, email</text>
+                    <text x="40" y="110" fill="#4a2a3a" font-size="11">birth_date, gender</text>
+                    <text x="40" y="125" fill="#4a2a3a" font-size="11">contract_accepted</text>
+                    <text x="40" y="140" fill="#4a2a3a" font-size="11">created_at</text>
+                    
+                    <line x1="240" y1="90" x2="290" y2="90" stroke="#f06292" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="265" y="80" text-anchor="middle" fill="#f06292" font-size="10">1 : N</text>
+                    
+                    <rect x="290" y="20" width="220" height="140" rx="10" fill="#fff0f3" stroke="#f06292" stroke-width="2"/>
+                    <text x="400" y="45" text-anchor="middle" fill="#d81b60" font-weight="bold" font-size="14">application_languages</text>
+                    <text x="310" y="65" fill="#4a2a3a" font-size="11">id (PK)</text>
+                    <text x="310" y="80" fill="#f06292" font-size="11">application_id (FK)</text>
+                    <text x="310" y="95" fill="#f06292" font-size="11">language_id (FK)</text>
+                    
+                    <line x1="510" y1="90" x2="560" y2="90" stroke="#f06292" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="535" y="80" text-anchor="middle" fill="#f06292" font-size="10">N : 1</text>
+                    
+                    <rect x="560" y="20" width="220" height="140" rx="10" fill="#fff0f3" stroke="#f06292" stroke-width="2"/>
+                    <text x="670" y="45" text-anchor="middle" fill="#d81b60" font-weight="bold" font-size="14">programming_languages</text>
+                    <text x="580" y="65" fill="#4a2a3a" font-size="11">id (PK)</text>
+                    <text x="580" y="80" fill="#4a2a3a" font-size="11">name (UNIQUE)</text>
+                    <text x="580" y="95" fill="#4a2a3a" font-size="11">Pascal, C, C++</text>
+                    <text x="580" y="110" fill="#4a2a3a" font-size="11">JavaScript, PHP</text>
+                    <text x="580" y="125" fill="#4a2a3a" font-size="11">Python, Java, Go...</text>
+                </svg>
+            </div>
+            <p><strong>Примечание:</strong> Использование внешних ключей гарантирует целостность данных. При удалении анкеты (<code>ON DELETE CASCADE</code>) автоматически удаляются все связанные с ней записи о языках программирования.</p>
+        </div>
+
+        <!-- Ссылки -->
+        <div class="action-buttons" style="margin-top: 1.5rem; text-align: center;">
+            <a href="index.php" class="action-btn">📝 Вернуться к форме</a>
+            <a href="list.php" class="action-btn">📋 Список анкет</a>
+        </div>
+    </main>
+
+  
+</body>
+</html>
