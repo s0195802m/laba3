@@ -14,8 +14,6 @@ function showError($message) {
     <body>
         <header>
             <div class="container">
-                <h1>📡 Программно-аппаратные средства Web</h1>
-                <p class="subtitle">(с) Сергей Синица 2020</p>
                 <h2>Задание 3. Ошибка при заполнении формы</h2>
             </div>
         </header>
@@ -23,7 +21,7 @@ function showError($message) {
             <div class="error-message">
                 <strong>❌ Ошибка:</strong> ' . htmlspecialchars($message) . '
             </div>
-            <a href="index.html" class="back-link">← Вернуться к форме</a>
+            <a href="index.php" class="back-link">← Вернуться к форме</a>
         </main>
         <footer><div class="container"><p>Лабораторная работа №3</p></div></footer>
     </body>
@@ -43,8 +41,6 @@ function showSuccess($message, $id = null) {
     <body>
         <header>
             <div class="container">
-                <h1>📡 Программно-аппаратные средства Web</h1>
-                <p class="subtitle">(с) Сергей Синица 2020</p>
                 <h2>Задание 3. Данные успешно сохранены</h2>
             </div>
         </header>
@@ -53,7 +49,7 @@ function showSuccess($message, $id = null) {
                 <strong>✅ ' . htmlspecialchars($message) . '</strong><br>' .
                 ($id ? "ID записи: " . htmlspecialchars($id) : "") . '
             </div>
-            <a href="index.html" class="back-link">← Заполнить новую форму</a>
+            <a href="index.php" class="back-link">← Заполнить новую форму</a>
         </main>
         <footer><div class="container"><p>Лабораторная работа №3</p></div></footer>
     </body>
